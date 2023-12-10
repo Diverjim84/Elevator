@@ -1,0 +1,119 @@
+ 
+ 
+ PreScalers
+ Timer 0
+ //---------------------------------------------- Set PWM frequency for D4 & D13 ------------------------------
+
+//TCCR0B = TCCR0B & B11111000 | B00000001;    // set timer 0 divisor to     1 for PWM frequency of 62500.00 Hz
+//TCCR0B = TCCR0B & B11111000 | B00000010;    // set timer 0 divisor to     8 for PWM frequency of  7812.50 Hz
+//TCCR0B = TCCR0B & B11111000 | B00000011;    <// set timer 0 divisor to    64 for PWM frequency of   976.56 Hz (Default)
+//TCCR0B = TCCR0B & B11111000 | B00000100;    // set timer 0 divisor to   256 for PWM frequency of   244.14 Hz
+//TCCR0B = TCCR0B & B11111000 | B00000101;    // set timer 0 divisor to  1024 for PWM frequency of    61.04 Hz
+
+
+Timer 1
+//---------------------------------------------- Set PWM frequency for D11 & D12 -----------------------------
+
+//TCCR1B = TCCR1B & B11111000 | B00000001;    // set timer 1 divisor to     1 for PWM frequency of 31372.55 Hz
+//TCCR1B = TCCR1B & B11111000 | B00000010;    // set timer 1 divisor to     8 for PWM frequency of  3921.16 Hz
+//TCCR1B = TCCR1B & B11111000 | B00000011;    // set timer 1 divisor to    64 for PWM frequency of   490.20 Hz
+//TCCR1B = TCCR1B & B11111000 | B00000100;    // set timer 1 divisor to   256 for PWM frequency of   122.55 Hz
+//TCCR1B = TCCR1B & B11111000 | B00000101;    // set timer 1 divisor to  1024 for PWM frequency of    30.64 Hz
+
+
+Timer 2
+//---------------------------------------------- Set PWM frequency for D9 & D10 ------------------------------
+
+//TCCR2B = TCCR2B & B11111000 | B00000001;    // set timer 2 divisor to     1 for PWM frequency of 31372.55 Hz
+//TCCR2B = TCCR2B & B11111000 | B00000010;    // set timer 2 divisor to     8 for PWM frequency of  3921.16 Hz
+//TCCR2B = TCCR2B & B11111000 | B00000011;    // set timer 2 divisor to    32 for PWM frequency of   980.39 Hz
+//TCCR2B = TCCR2B & B11111000 | B00000100;    // set timer 2 divisor to    64 for PWM frequency of   490.20 Hz
+//TCCR2B = TCCR2B & B11111000 | B00000101;    // set timer 2 divisor to   128 for PWM frequency of   245.10 Hz
+//TCCR2B = TCCR2B & B11111000 | B00000110;    // set timer 2 divisor to   256 for PWM frequency of   122.55 Hz
+//TCCR2B = TCCR2B & B11111000 | B00000111;    // set timer 2 divisor to  1024 for PWM frequency of    30.64 Hz
+
+
+Timer 3
+//---------------------------------------------- Set PWM frequency for D2, D3 & D5 ---------------------------
+
+//TCCR3B = TCCR3B & B11111000 | B00000001;    // set timer 3 divisor to     1 for PWM frequency of 31372.55 Hz
+//TCCR3B = TCCR3B & B11111000 | B00000010;    // set timer 3 divisor to     8 for PWM frequency of  3921.16 Hz
+//TCCR3B = TCCR3B & B11111000 | B00000011;    // set timer 3 divisor to    64 for PWM frequency of   490.20 Hz
+//TCCR3B = TCCR3B & B11111000 | B00000100;    // set timer 3 divisor to   256 for PWM frequency of   122.55 Hz
+//TCCR3B = TCCR3B & B11111000 | B00000101;    // set timer 3 divisor to  1024 for PWM frequency of    30.64 Hz
+
+Timer 4
+//---------------------------------------------- Set PWM frequency for D6, D7 & D8 ---------------------------
+
+//TCCR4B = TCCR4B & B11111000 | B00000001;    // set timer 4 divisor to     1 for PWM frequency of 31372.55 Hz
+//TCCR4B = TCCR4B & B11111000 | B00000010;    // set timer 4 divisor to     8 for PWM frequency of  3921.16 Hz
+//TCCR4B = TCCR4B & B11111000 | B00000011;    // set timer 4 divisor to    64 for PWM frequency of   490.20 Hz
+//TCCR4B = TCCR4B & B11111000 | B00000100;    // set timer 4 divisor to   256 for PWM frequency of   122.55 Hz
+//TCCR4B = TCCR4B & B11111000 | B00000101;    // set timer 4 divisor to  1024 for PWM frequency of    30.64 Hz
+
+Timer 5
+//---------------------------------------------- Set PWM frequency for D44, D45 & D46 ------------------------
+
+//TCCR5B = TCCR5B & B11111000 | B00000001;    // set timer 5 divisor to     1 for PWM frequency of 31372.55 Hz
+//TCCR5B = TCCR5B & B11111000 | B00000010;    // set timer 5 divisor to     8 for PWM frequency of  3921.16 Hz
+//TCCR5B = TCCR5B & B11111000 | B00000011;    // set timer 5 divisor to    64 for PWM frequency of   490.20 Hz
+//TCCR5B = TCCR5B & B11111000 | B00000100;    // set timer 5 divisor to   256 for PWM frequency of   122.55 Hz
+//TCCR5B = TCCR5B & B11111000 | B00000101;    // set timer 5 divisor to  1024 for PWM frequency of    30.64 Hz
+
+/*
+Timer Pin deep dive
+  8 bit timer = Timer 0
+  Pg 126 of data sheet
+    Pins 
+      OCR0A = PB7 = D13
+      OCR0B = PG5 = D4
+  
+  16 bit Timers = Timer 1,3,4,5
+  pg 132 of data sheet
+    pins:
+      Timer 1
+        OCR1A = PB5 = D11
+        OCR1B = PB6 = D12
+        OCR1C = PB7 = D13
+      Timer 3
+        OCR3A = PE3 = D5
+        OCR3B = PE4 = D2
+        OCR3C = PE5 = D3
+      Timer 4
+        OCR4A = PH3 = D6
+        OCR4B = PH4 = D7
+        OCR4C = PH5 = D8
+      Timer 5
+        OCR5A = PL3 = D46
+        OCR5B = PL4 = D45
+        OCR5C = PL5 = D44
+      
+  For PWM Power control we want to use Fast PWM control
+  for 16 bit timers that is setting the WGMx = 0b1110 
+  using ICRn as the top, allowing for fine tuning of the period.
+
+  This allows the use of OCRnA to set the duty cycle.
+
+  Period is defined as f_pwm = f_clk_io/(PreScaler*(1+ICRn))
+  so ICRn = (f_clk_io/(PreScaler*f_pwm))-1
+
+  Using a prescaler of 8, and f_pwm = 200Hz; ICRn = 9,999
+  This assumes f_clk_io = f_clk_cpu = 16MHz
+
+
+Configuring Timer 4 Pin 8 for 200Hz Example
+
+  //Configure Pin 8 to use Timer 4, setup fast PWM 
+  TCCR4A = 0x00;
+  TCCR4B = 0x00;
+  
+  //Fast PWM = WGM = 0b1110
+  //Prescaler = 8 = 0b010
+  //Clear on compare of Pin 8 (OCR4C) and set on bottom = COM4C = 0b10
+  TCCR4A |= (1<<COM4C1) | (1<<WGM41); //Set Pin 8 for Set on compare with OC4C Non-inverting
+  TCCR4B |= (1<<WGM43) | (1<<WGM42) | (1<<CS41) ; //Set timer4, fast PWM, prescaler to 8
+  
+  ICR4 = 9999; //(16,000,000Hz/200Hz/8)-1 = 9,999
+  
+  OCR4C = 5000; //Init duty cycle to 50%
+
