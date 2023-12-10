@@ -3,6 +3,10 @@
 //comment out to stop printing PWM debug Statements
 #define PRINT_DEBUG_PWM
 
+//Print settings of motors
+#define PRINT_DEBUG_MOTOR
+
+
 //Comment out to end all Debug
 #define DEBUG_ON
 
@@ -53,6 +57,163 @@ void configMotor2Pins(){
   pinMode(M2DIAG, OUTPUT);
   pinMode(M2OCM, INPUT);
   
+}
+
+/*
+  Current code assumes high is Enabled and low is Disabled
+*/
+void setMotor1Enable(bool enable){
+
+  digitalWrite(M1EN, (uint8_t)enable);//Cast bool to int, set pin
+  
+  #ifdef DEBUG_ON
+  #ifdef PRINT_DEBUG_MOTOR
+    Serial.print("\n\n Motor 1 Enable set to: ");
+    
+    if(digitalRead(M1EN)==1){
+      Serial.print("Enabled (pin = ");
+    }else{
+      Serial.print("Disabled (pin = ");
+    }
+
+    Serial.print(digitalRead(M1EN), DEC);
+    Serial.print(")\n");
+
+  #endif //PRINT_DEBUG_MOTOR
+  #endif //DEBUG_ON
+}
+
+
+/*
+  Current code assumes high is Enabled and low is Disabled
+*/
+void setMotor2Enable(bool enable){
+
+  digitalWrite(M2EN, (uint8_t)enable);//Cast bool to int, set pin
+  
+  #ifdef DEBUG_ON
+  #ifdef PRINT_DEBUG_MOTOR
+    Serial.print("\n\n Motor 2 Enable set to: ");
+    
+    if(digitalRead(M2EN)==1){
+      Serial.print("Enabled (pin = ");
+    }else{
+      Serial.print("Disabled (pin = ");
+    }
+
+    Serial.print(digitalRead(M2EN), DEC);
+    Serial.print(")\n");
+
+  #endif //PRINT_DEBUG_MOTOR
+  #endif //DEBUG_ON
+}
+
+/*
+  Current code assumes high is forward and low is reverse
+*/
+void setMotor1Dir(bool forward){
+
+  digitalWrite(M1DIR, (uint8_t)forward);//Cast bool to int, set pin
+  
+  #ifdef DEBUG_ON
+  #ifdef PRINT_DEBUG_MOTOR
+    Serial.print("\n\n Motor 1 Direction Set to: ");
+    
+    if(forward){
+      Serial.print("Forward (pin = ");
+    }else{
+      Serial.print("Reverse (pin = ");
+    }
+
+    Serial.print(digitalRead(M1DIR), DEC);
+    Serial.print(")\n");
+
+  #endif //PRINT_DEBUG_MOTOR
+  #endif //DEBUG_ON
+}
+
+/*
+  Current code assumes high is forward and low is reverse
+*/
+void setMotor2Dir(bool forward){
+
+  digitalWrite(M2DIR, (uint8_t)forward);//Cast bool to int, set pin
+  
+  #ifdef DEBUG_ON
+  #ifdef PRINT_DEBUG_MOTOR
+    Serial.print("\n\n Motor 2 Direction Set to: ");
+    
+    if(forward){
+      Serial.print("Forward (pin = ");
+    }else{
+      Serial.print("Reverse (pin = ");
+    }
+
+    Serial.print(digitalRead(M2DIR), DEC);
+    Serial.print(")\n");
+
+  #endif //PRINT_DEBUG_MOTOR
+  #endif //DEBUG_ON
+}
+
+//False = no fault
+bool getMotor1HasFault(){
+  #ifdef DEBUG_ON
+  #ifdef PRINT_DEBUG_MOTOR
+    Serial.print("\n\n Motor 1 Fault Pin = ");
+    Serial.print(digitalRead(M1DIAG), DEC);
+    Serial.print("\n");
+  #endif //PRINT_DEBUG_MOTOR
+  #endif //DEBUG_ON
+
+  return (bool)digitalRead(M1DIAG);
+}
+
+//False = no fault
+bool getMotor2HasFault(){
+  
+  #ifdef DEBUG_ON
+  #ifdef PRINT_DEBUG_MOTOR
+    Serial.print("\n\n Motor 2 Fault Pin = ");
+    Serial.print(digitalRead(M2DIAG), DEC);
+    Serial.print("\n");
+  #endif //PRINT_DEBUG_MOTOR
+  #endif //DEBUG_ON
+
+  return (bool)digitalRead(M2DIAG);
+
+}
+
+//5V / 1024 ADC counts / 500 mV per A = 10 mA per count
+int getMotor1Current_mA(){
+  #ifdef DEBUG_ON
+  #ifdef PRINT_DEBUG_MOTOR
+    Serial.print("\n\n Motor 1 Current Consumtion = ");
+    Serial.print(analogRead(M1OCM) * 10, DEC);
+    Serial.print("mA (raw = ");
+    Serial.print(analogRead(M1OCM), DEC);
+    Serial.print(")\n");
+  #endif //PRINT_DEBUG_MOTOR
+  #endif //DEBUG_ON
+
+  // 5V / 1024 ADC counts / 500 mV per A = 10 mA per count
+  return analogRead(M1OCM) * 10;
+}
+
+//5V / 1024 ADC counts / 500 mV per A = 10 mA per count
+int getMotor2Current_mA(){
+  #ifdef DEBUG_ON
+  #ifdef PRINT_DEBUG_MOTOR
+    Serial.print("\n\n Motor 2 Current Consumtion = ");
+    Serial.print(analogRead(M2OCM) * 10, DEC);
+    Serial.print("mA (raw = ");
+    Serial.print(analogRead(M2OCM), DEC);
+    Serial.print(")\n");
+  #endif //PRINT_DEBUG_MOTOR
+  #endif //DEBUG_ON
+
+  // 5V / 1024 ADC counts / 500 mV per A = 10 mA per count
+  return analogRead(M2OCM) * 10;
 }
 
 /*
@@ -187,9 +348,19 @@ void setup() {
     Serial.begin(115200);
   #endif
 
-  configMotor1Pins();
-  configMotor2Pins();
+  //Configure Timer for Motor PWMs
   configTimer4();
+
+  //Configure Motor 1
+  configMotor1Pins();
+  setMotor1Dir(true);
+  setMotor1Enable(true);
+
+  //Configure Motor 2
+  configMotor2Pins();
+  setMotor2Dir(true);
+  setMotor2Enable(true);
+  
 
   setMotor1DutyCycle(75);//Set motor 1 to 75%
   setMotor2DutyCycle(25);//Set motor 2 to 25%
@@ -204,5 +375,27 @@ void loop() {
   digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));//Toggle Built in LED
   delay(250);//2hz blink
 
-  
+  if(getMotor1HasFault()){
+    #ifdef DEBUG_ON
+    #ifdef PRINT_DEBUG_MOTOR
+      Serial.print("Motor 1 Fault Detected");
+    #endif //PRINT_DEBUG_MOTOR
+    #endif //DEBUG_ON  
+  }
+
+  if(getMotor2HasFault()){
+    #ifdef DEBUG_ON
+    #ifdef PRINT_DEBUG_MOTOR
+      Serial.print("Motor 2 Fault Detected");
+    #endif //PRINT_DEBUG_MOTOR
+    #endif //DEBUG_ON  
+  }
+
+  #ifdef DEBUG_ON
+  #ifdef PRINT_DEBUG_MOTOR
+    getMotor1Current_mA();//use built in debug print statements
+    getMotor2Current_mA();//use built in debug print statements
+  #endif //PRINT_DEBUG_MOTOR
+  #endif //DEBUG_ON
+
 }
