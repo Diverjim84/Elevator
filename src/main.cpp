@@ -1,14 +1,18 @@
 #include <Arduino.h>
 
-//comment out to stop printing PWM debug Statements
-#define PRINT_DEBUG_PWM
-
-//Print settings of motors
-#define PRINT_DEBUG_MOTOR
-
 
 //Comment out to end all Debug
 #define DEBUG_ON
+
+#ifdef DEBUG_ON
+  //comment out to stop printing PWM debug Statements
+  #define PRINT_DEBUG_PWM
+
+  //Print settings of motors
+  #define PRINT_DEBUG_MOTOR
+
+#endif //DEBUG_ON
+
 
 //MotorShieldPins()
 
@@ -66,7 +70,6 @@ void setMotor1Enable(bool enable){
 
   digitalWrite(M1EN, (uint8_t)enable);//Cast bool to int, set pin
   
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_MOTOR
     Serial.print("\n\n Motor 1 Enable set to: ");
     
@@ -80,7 +83,7 @@ void setMotor1Enable(bool enable){
     Serial.print(")\n");
 
   #endif //PRINT_DEBUG_MOTOR
-  #endif //DEBUG_ON
+  
 }
 
 
@@ -91,7 +94,6 @@ void setMotor2Enable(bool enable){
 
   digitalWrite(M2EN, (uint8_t)enable);//Cast bool to int, set pin
   
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_MOTOR
     Serial.print("\n\n Motor 2 Enable set to: ");
     
@@ -105,7 +107,7 @@ void setMotor2Enable(bool enable){
     Serial.print(")\n");
 
   #endif //PRINT_DEBUG_MOTOR
-  #endif //DEBUG_ON
+  
 }
 
 /*
@@ -115,7 +117,6 @@ void setMotor1Dir(bool forward){
 
   digitalWrite(M1DIR, (uint8_t)forward);//Cast bool to int, set pin
   
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_MOTOR
     Serial.print("\n\n Motor 1 Direction Set to: ");
     
@@ -129,7 +130,7 @@ void setMotor1Dir(bool forward){
     Serial.print(")\n");
 
   #endif //PRINT_DEBUG_MOTOR
-  #endif //DEBUG_ON
+  
 }
 
 /*
@@ -139,7 +140,6 @@ void setMotor2Dir(bool forward){
 
   digitalWrite(M2DIR, (uint8_t)forward);//Cast bool to int, set pin
   
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_MOTOR
     Serial.print("\n\n Motor 2 Direction Set to: ");
     
@@ -153,40 +153,35 @@ void setMotor2Dir(bool forward){
     Serial.print(")\n");
 
   #endif //PRINT_DEBUG_MOTOR
-  #endif //DEBUG_ON
+  
 }
 
 //False = no fault
 bool getMotor1HasFault(){
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_MOTOR
     Serial.print("\n\n Motor 1 Fault Pin = ");
     Serial.print(digitalRead(M1DIAG), DEC);
     Serial.print("\n");
   #endif //PRINT_DEBUG_MOTOR
-  #endif //DEBUG_ON
-
+  
   return (bool)digitalRead(M1DIAG);
 }
 
 //False = no fault
 bool getMotor2HasFault(){
   
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_MOTOR
     Serial.print("\n\n Motor 2 Fault Pin = ");
     Serial.print(digitalRead(M2DIAG), DEC);
     Serial.print("\n");
   #endif //PRINT_DEBUG_MOTOR
-  #endif //DEBUG_ON
-
+  
   return (bool)digitalRead(M2DIAG);
 
 }
 
 //5V / 1024 ADC counts / 500 mV per A = 10 mA per count
 int getMotor1Current_mA(){
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_MOTOR
     Serial.print("\n\n Motor 1 Current Consumtion = ");
     Serial.print(analogRead(M1OCM) * 10, DEC);
@@ -194,15 +189,13 @@ int getMotor1Current_mA(){
     Serial.print(analogRead(M1OCM), DEC);
     Serial.print(")\n");
   #endif //PRINT_DEBUG_MOTOR
-  #endif //DEBUG_ON
-
+  
   // 5V / 1024 ADC counts / 500 mV per A = 10 mA per count
   return analogRead(M1OCM) * 10;
 }
 
 //5V / 1024 ADC counts / 500 mV per A = 10 mA per count
 int getMotor2Current_mA(){
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_MOTOR
     Serial.print("\n\n Motor 2 Current Consumtion = ");
     Serial.print(analogRead(M2OCM) * 10, DEC);
@@ -210,8 +203,7 @@ int getMotor2Current_mA(){
     Serial.print(analogRead(M2OCM), DEC);
     Serial.print(")\n");
   #endif //PRINT_DEBUG_MOTOR
-  #endif //DEBUG_ON
-
+  
   // 5V / 1024 ADC counts / 500 mV per A = 10 mA per count
   return analogRead(M2OCM) * 10;
 }
@@ -250,7 +242,6 @@ void configTimer4(){
   OCR4C = 0; //Set pin 8 Duty Cycle to 0% - Off
 
   //if PRINT_DEBUG_PWM is defined print out registers set
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_PWM
     Serial.print("\n\nTimer 4 Configured:");
 
@@ -279,7 +270,7 @@ void configTimer4(){
     Serial.println("OCR4C = Counter Value when pin should turn off");
 
   #endif //PRINT_DEBUG_PWM
-  #endif //DEBUG_ON
+  
 }
 
 /*
@@ -296,7 +287,6 @@ void setMotor1DutyCycle(uint16_t percent){
   OCR4B = ICR4*percent/100;
 
   //Print all details of changing PWM on Pin 7 if debugging
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_PWM
     Serial.print("\n\nPin 7 Duty Cycle Changed to:");
     Serial.print(percent, DEC);
@@ -310,7 +300,7 @@ void setMotor1DutyCycle(uint16_t percent){
     Serial.println("OCR4B = Counter Value when pin should turn off");
 
   #endif //PRINT_DEBUG_PWM
-  #endif //DEBUG_ON
+  
 }
 
 /*
@@ -326,7 +316,6 @@ void setMotor2DutyCycle(uint16_t percent){
   //Set compare register to the value to turn off
   OCR4C = ICR4*percent/100;
     //Print all details of changing PWM on Pin 7 if debugging
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_PWM
     Serial.print("\n\nPin 7 Duty Cycle Changed to:");
     Serial.print(percent, DEC);
@@ -339,7 +328,7 @@ void setMotor2DutyCycle(uint16_t percent){
     Serial.print(OCR4C, BIN);
     Serial.println("OCR4C = Counter Value when pin should turn off");
   #endif //PRINT_DEBUG_PWM
-  #endif //DEBUG_ON
+  
 }
 
 void setup() {
@@ -376,26 +365,20 @@ void loop() {
   delay(250);//2hz blink
 
   if(getMotor1HasFault()){
-    #ifdef DEBUG_ON
     #ifdef PRINT_DEBUG_MOTOR
-      Serial.print("Motor 1 Fault Detected");
+      Serial.print("\nMotor 1 Fault Detected\n");
     #endif //PRINT_DEBUG_MOTOR
-    #endif //DEBUG_ON  
   }
 
   if(getMotor2HasFault()){
-    #ifdef DEBUG_ON
     #ifdef PRINT_DEBUG_MOTOR
-      Serial.print("Motor 2 Fault Detected");
+      Serial.print("\nMotor 2 Fault Detected\n");
     #endif //PRINT_DEBUG_MOTOR
-    #endif //DEBUG_ON  
   }
 
-  #ifdef DEBUG_ON
   #ifdef PRINT_DEBUG_MOTOR
     getMotor1Current_mA();//use built in debug print statements
     getMotor2Current_mA();//use built in debug print statements
   #endif //PRINT_DEBUG_MOTOR
-  #endif //DEBUG_ON
-
+  
 }
