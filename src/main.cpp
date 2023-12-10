@@ -80,7 +80,7 @@ void setMotor1Enable(bool enable){
   digitalWrite(M1EN, (uint8_t)enable);//Cast bool to int, set pin
   
   #ifdef PRINT_DEBUG_MOTOR
-    Serial.print("\n\n Motor 1 Enable set to: ");
+    Serial.print("\nMotor 1 Enable set to: ");
     
     if(digitalRead(M1EN)==1){
       Serial.print("Enabled (pin = ");
@@ -104,7 +104,7 @@ void setMotor2Enable(bool enable){
   digitalWrite(M2EN, (uint8_t)enable);//Cast bool to int, set pin
   
   #ifdef PRINT_DEBUG_MOTOR
-    Serial.print("\n\n Motor 2 Enable set to: ");
+    Serial.print("\nMotor 2 Enable set to: ");
     
     if(digitalRead(M2EN)==1){
       Serial.print("Enabled (pin = ");
@@ -127,7 +127,7 @@ void setMotor1Dir(bool forward){
   digitalWrite(M1DIR, (uint8_t)forward);//Cast bool to int, set pin
   
   #ifdef PRINT_DEBUG_MOTOR
-    Serial.print("\n\n Motor 1 Direction Set to: ");
+    Serial.print("\nMotor 1 Direction Set to: ");
     
     if(forward){
       Serial.print("Forward (pin = ");
@@ -150,7 +150,7 @@ void setMotor2Dir(bool forward){
   digitalWrite(M2DIR, (uint8_t)forward);//Cast bool to int, set pin
   
   #ifdef PRINT_DEBUG_MOTOR
-    Serial.print("\n\n Motor 2 Direction Set to: ");
+    Serial.print("\nMotor 2 Direction Set to: ");
     
     if(forward){
       Serial.print("Forward (pin = ");
@@ -168,7 +168,7 @@ void setMotor2Dir(bool forward){
 //False = no fault
 bool getMotor1HasFault(){
   #ifdef PRINT_DEBUG_MOTOR_FAULTS
-    Serial.print("\n\n Motor 1 Fault Pin = ");
+    Serial.print("\nMotor 1 Fault Pin = ");
     Serial.print(digitalRead(M1DIAG), DEC);
     Serial.print("\n");
   #endif //PRINT_DEBUG_MOTOR_FAULTS
@@ -180,7 +180,7 @@ bool getMotor1HasFault(){
 bool getMotor2HasFault(){
   
   #ifdef PRINT_DEBUG_MOTOR_FAULTS
-    Serial.print("\n\n Motor 2 Fault Pin = ");
+    Serial.print("\nMotor 2 Fault Pin = ");
     Serial.print(digitalRead(M2DIAG), DEC);
     Serial.print("\n");
   #endif //PRINT_DEBUG_MOTOR_FAULTS
@@ -192,7 +192,7 @@ bool getMotor2HasFault(){
 //5V / 1024 ADC counts / 500 mV per A = 10 mA per count
 int getMotor1Current_mA(){
   #ifdef PRINT_DEBUG_MOTOR_CURRENT
-    Serial.print("\n\n Motor 1 Current Consumtion = ");
+    Serial.print("\nMotor 1 Current Consumtion = ");
     Serial.print(analogRead(M1OCM) * 10, DEC);
     Serial.print("mA (raw = ");
     Serial.print(analogRead(M1OCM), DEC);
@@ -206,7 +206,7 @@ int getMotor1Current_mA(){
 //5V / 1024 ADC counts / 500 mV per A = 10 mA per count
 int getMotor2Current_mA(){
   #ifdef PRINT_DEBUG_MOTOR_CURRENT
-    Serial.print("\n\n Motor 2 Current Consumtion = ");
+    Serial.print("\nMotor 2 Current Consumtion = ");
     Serial.print(analogRead(M2OCM) * 10, DEC);
     Serial.print("mA (raw = ");
     Serial.print(analogRead(M2OCM), DEC);
@@ -256,27 +256,27 @@ void configTimer4(){
 
     Serial.print("\nTCCR4A: ");
     Serial.print(TCCR4A, BIN);
-    Serial.println("TCCR4A = [COM4A1, COM4A0, COM4B1, COM4B0, COM4C1, COM4C0, WGM41, WGM40]");
+    Serial.println("\nTCCR4A = [COM4A1, COM4A0, COM4B1, COM4B0, COM4C1, COM4C0, WGM41, WGM40]");
 
     Serial.print("\nTCCR4B: ");
     Serial.print(TCCR4B, BIN);
-    Serial.println("TCCR4B = [ICNC4, ICES4, - , WGM43, WGM42, CS42, CS41, CS40]");
+    Serial.println("\nTCCR4B = [ICNC4, ICES4, - , WGM43, WGM42, CS42, CS41, CS40]");
 
     Serial.print("\nTCCR4C: ");
     Serial.print(TCCR4C, BIN);
-    Serial.println("TCCR4B = [FOC4A, FOC4B, FOC4C, - , - , - , - , -]");
+    Serial.println("\nTCCR4C = [FOC4A, FOC4B, FOC4C, - , - , - , - , -]");
 
     Serial.print("\nICR4: ");
-    Serial.print(ICR4, BIN);
-    Serial.println("ICR4 = top of timer = period");
+    Serial.print(ICR4, DEC);
+    Serial.println("\nICR4 = top of timer = period");
 
     Serial.print("\nOCR4B: ");
-    Serial.print(OCR4B, BIN);
-    Serial.println("OCR4B = Counter Value when pin should turn off");
+    Serial.print(OCR4B, DEC);
+    Serial.println("\nOCR4B = Counter Value when pin should turn off");
 
     Serial.print("\nOCR4C: ");
-    Serial.print(OCR4C, BIN);
-    Serial.println("OCR4C = Counter Value when pin should turn off");
+    Serial.print(OCR4C, DEC);
+    Serial.println("\nOCR4C = Counter Value when pin should turn off");
 
   #endif //PRINT_DEBUG_PWM
   
@@ -297,16 +297,16 @@ void setMotor1DutyCycle(uint16_t percent){
 
   //Print all details of changing PWM on Pin 7 if debugging
   #ifdef PRINT_DEBUG_PWM
-    Serial.print("\n\nPin 7 Duty Cycle Changed to:");
+    Serial.print("\nPin 7 Duty Cycle Changed to:");
     Serial.print(percent, DEC);
 
     Serial.print("\nICR4: ");
     Serial.print(ICR4, BIN);
-    Serial.println("ICR4 = top of timer = period");
+    Serial.println("\nICR4 = top of timer = period");
 
     Serial.print("\nOCR4B: ");
     Serial.print(OCR4B, BIN);
-    Serial.println("OCR4B = Counter Value when pin should turn off");
+    Serial.println("\nOCR4B = Counter Value when pin should turn off");
 
   #endif //PRINT_DEBUG_PWM
   
@@ -326,16 +326,16 @@ void setMotor2DutyCycle(uint16_t percent){
   OCR4C = ICR4*percent/100;
     //Print all details of changing PWM on Pin 7 if debugging
   #ifdef PRINT_DEBUG_PWM
-    Serial.print("\n\nPin 7 Duty Cycle Changed to:");
+    Serial.print("\nPin 8 Duty Cycle Changed to:");
     Serial.print(percent, DEC);
 
     Serial.print("\nICR4: ");
     Serial.print(ICR4, BIN);
-    Serial.println("ICR4 = top of timer = period");
+    Serial.println("\nICR4 = top of timer = period");
 
     Serial.print("\nOCR4C: ");
     Serial.print(OCR4C, BIN);
-    Serial.println("OCR4C = Counter Value when pin should turn off");
+    Serial.println("\nOCR4C = Counter Value when pin should turn off");
   #endif //PRINT_DEBUG_PWM
   
 }
