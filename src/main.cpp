@@ -11,6 +11,12 @@
   //Print settings of motors
   #define PRINT_DEBUG_MOTOR
 
+  //Print motor Faults
+  #define PRINT_DEBUG_MOTOR_FAULTS
+
+  //Print Motor Current draw
+  #define PRINT_DEBUG_MOTOR_CURRENT
+
 #endif //DEBUG_ON
 
 
@@ -158,11 +164,11 @@ void setMotor2Dir(bool forward){
 
 //False = no fault
 bool getMotor1HasFault(){
-  #ifdef PRINT_DEBUG_MOTOR
+  #ifdef PRINT_DEBUG_MOTOR_FAULTS
     Serial.print("\n\n Motor 1 Fault Pin = ");
     Serial.print(digitalRead(M1DIAG), DEC);
     Serial.print("\n");
-  #endif //PRINT_DEBUG_MOTOR
+  #endif //PRINT_DEBUG_MOTOR_FAULTS
   
   return (bool)digitalRead(M1DIAG);
 }
@@ -170,11 +176,11 @@ bool getMotor1HasFault(){
 //False = no fault
 bool getMotor2HasFault(){
   
-  #ifdef PRINT_DEBUG_MOTOR
+  #ifdef PRINT_DEBUG_MOTOR_FAULTS
     Serial.print("\n\n Motor 2 Fault Pin = ");
     Serial.print(digitalRead(M2DIAG), DEC);
     Serial.print("\n");
-  #endif //PRINT_DEBUG_MOTOR
+  #endif //PRINT_DEBUG_MOTOR_FAULTS
   
   return (bool)digitalRead(M2DIAG);
 
@@ -182,13 +188,13 @@ bool getMotor2HasFault(){
 
 //5V / 1024 ADC counts / 500 mV per A = 10 mA per count
 int getMotor1Current_mA(){
-  #ifdef PRINT_DEBUG_MOTOR
+  #ifdef PRINT_DEBUG_MOTOR_CURRENT
     Serial.print("\n\n Motor 1 Current Consumtion = ");
     Serial.print(analogRead(M1OCM) * 10, DEC);
     Serial.print("mA (raw = ");
     Serial.print(analogRead(M1OCM), DEC);
     Serial.print(")\n");
-  #endif //PRINT_DEBUG_MOTOR
+  #endif //PRINT_DEBUG_MOTOR_CURRENT
   
   // 5V / 1024 ADC counts / 500 mV per A = 10 mA per count
   return analogRead(M1OCM) * 10;
@@ -196,13 +202,13 @@ int getMotor1Current_mA(){
 
 //5V / 1024 ADC counts / 500 mV per A = 10 mA per count
 int getMotor2Current_mA(){
-  #ifdef PRINT_DEBUG_MOTOR
+  #ifdef PRINT_DEBUG_MOTOR_CURRENT
     Serial.print("\n\n Motor 2 Current Consumtion = ");
     Serial.print(analogRead(M2OCM) * 10, DEC);
     Serial.print("mA (raw = ");
     Serial.print(analogRead(M2OCM), DEC);
     Serial.print(")\n");
-  #endif //PRINT_DEBUG_MOTOR
+  #endif //PRINT_DEBUG_MOTOR_CURRENT
   
   // 5V / 1024 ADC counts / 500 mV per A = 10 mA per count
   return analogRead(M2OCM) * 10;
@@ -365,20 +371,20 @@ void loop() {
   delay(250);//2hz blink
 
   if(getMotor1HasFault()){
-    #ifdef PRINT_DEBUG_MOTOR
+    #ifdef PRINT_DEBUG_MOTOR_FAULTS
       Serial.print("\nMotor 1 Fault Detected\n");
-    #endif //PRINT_DEBUG_MOTOR
+    #endif //PRINT_DEBUG_MOTOR_FAULTS
   }
 
   if(getMotor2HasFault()){
-    #ifdef PRINT_DEBUG_MOTOR
+    #ifdef PRINT_DEBUG_MOTOR_FAULTS
       Serial.print("\nMotor 2 Fault Detected\n");
-    #endif //PRINT_DEBUG_MOTOR
+    #endif //PRINT_DEBUG_MOTOR_FAULTS
   }
 
-  #ifdef PRINT_DEBUG_MOTOR
+  #ifdef PRINT_DEBUG_MOTOR_CURRENT
     getMotor1Current_mA();//use built in debug print statements
     getMotor2Current_mA();//use built in debug print statements
-  #endif //PRINT_DEBUG_MOTOR
+  #endif //PRINT_DEBUG_MOTOR_CURRENT
   
 }
