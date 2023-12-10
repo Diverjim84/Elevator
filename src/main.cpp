@@ -245,7 +245,7 @@ void configTimer4(){
   //TCCR4B = ICNC4 ICES4 – WGM43 WGM42 CS42 CS41 CS40
   TCCR4B |= (1<<WGM43) | (1<<WGM42) | (1<<CS41); //Set timer4, fast PWM, prescaler to 8
   
-  ICR4 = 9800; //(16,000,000Hz/200Hz/8)-1 = 9,999
+  ICR4 = 9900; //(16,000,000Hz/200Hz/8)-1 = 9,999
 
   OCR4B = 0; //Set pin 7 Duty Cycle to 0% - Off
   OCR4C = 0; //Set pin 8 Duty Cycle to 0% - Off
