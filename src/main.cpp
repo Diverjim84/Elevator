@@ -294,14 +294,20 @@ void setMotor1DutyCycle(uint16_t percent){
   }
 
   //Set compare register to the value to turn off
-  OCR4B = ICR4*percent/10;
+  uint16_t totalTicks = ICR4;
+  uint16_t onTicks = (uint16_t)(float)totalTicks*((float)percent/100.0);
+  OCR4B = onTicks;
 
   //Print all details of changing PWM on Pin 7 if debugging
   #ifdef PRINT_DEBUG_PWM
     Serial.print("\nPin 7 Duty Cycle Changed to:");
     Serial.print(percent, DEC);
-
-    Serial.print("\nICR4: ");
+    //Serial.print(";\tonTicks = ");
+    //Serial.print(onTicks, DEC);
+    //Serial.print(";\ttotalTicks = ");
+    //Serial.print(totalTicks, DEC);
+    
+    Serial.print("%\nICR4: ");
     Serial.print(ICR4, DEC);
     Serial.print(";\tICR4 = top of timer = period");
 
@@ -324,13 +330,16 @@ void setMotor2DutyCycle(uint16_t percent){
   }
 
   //Set compare register to the value to turn off
-  OCR4C = ICR4*percent/10;
-    //Print all details of changing PWM on Pin 7 if debugging
+  uint16_t totalTicks = ICR4;
+  uint16_t onTicks = (uint16_t)(float)totalTicks*((float)percent/100.0);
+  OCR4C = onTicks;
+  
+  //Print all details of changing PWM on Pin 7 if debugging
   #ifdef PRINT_DEBUG_PWM
     Serial.print("\nPin 8 Duty Cycle Changed to:");
     Serial.print(percent, DEC);
 
-    Serial.print("\nICR4: ");
+    Serial.print("%\nICR4: ");
     Serial.print(ICR4, DEC);
     Serial.print(";\tICR4 = top of timer = period");
 
