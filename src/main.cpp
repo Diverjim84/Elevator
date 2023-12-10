@@ -5,7 +5,10 @@
 #define DEBUG_ON
 
 #ifdef DEBUG_ON
-  //comment out to stop printing PWM debug Statements
+  //comment out to stop printing different levels
+  //Very important for keeping serial port output manageable
+  
+  //Print PWM debug Statements
   #define PRINT_DEBUG_PWM
 
   //Print settings of motors
