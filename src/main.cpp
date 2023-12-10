@@ -245,38 +245,39 @@ void configTimer4(){
   //TCCR4B = ICNC4 ICES4 – WGM43 WGM42 CS42 CS41 CS40
   TCCR4B |= (1<<WGM43) | (1<<WGM42) | (1<<CS41); //Set timer4, fast PWM, prescaler to 8
   
-  ICR4 = 9997; //(16,000,000Hz/200Hz/8)-1 = 9,999
+  ICR4 = 9800; //(16,000,000Hz/200Hz/8)-1 = 9,999
 
   OCR4B = 0; //Set pin 7 Duty Cycle to 0% - Off
   OCR4C = 0; //Set pin 8 Duty Cycle to 0% - Off
 
   //if PRINT_DEBUG_PWM is defined print out registers set
   #ifdef PRINT_DEBUG_PWM
-    Serial.print("\n\nTimer 4 Configured:");
+    Serial.print("\n\nTimer 4 Configured:\n");
 
-    Serial.print("\nTCCR4A: ");
-    Serial.print(TCCR4A, BIN);
     Serial.println("\nTCCR4A = [COM4A1, COM4A0, COM4B1, COM4B0, COM4C1, COM4C0, WGM41, WGM40]");
+    Serial.print("TCCR4A: ");
+    Serial.print(TCCR4A, BIN);
 
-    Serial.print("\nTCCR4B: ");
+    
+    Serial.println("\n\nTCCR4B = [ICNC4, ICES4, - , WGM43, WGM42, CS42, CS41, CS40]");
+    Serial.print("TCCR4B: ");
     Serial.print(TCCR4B, BIN);
-    Serial.println("\nTCCR4B = [ICNC4, ICES4, - , WGM43, WGM42, CS42, CS41, CS40]");
 
-    Serial.print("\nTCCR4C: ");
+    Serial.println("\n\nTCCR4C = [FOC4A, FOC4B, FOC4C, - , - , - , - , -]");
+    Serial.print("TCCR4C: ");
     Serial.print(TCCR4C, BIN);
-    Serial.println("\nTCCR4C = [FOC4A, FOC4B, FOC4C, - , - , - , - , -]");
-
-    Serial.print("\nICR4: ");
+    
+    Serial.print("\n\nICR4: ");
     Serial.print(ICR4, DEC);
-    Serial.println("\nICR4 = top of timer = period");
+    Serial.print(";\tICR4 = top of timer = period\n");
 
-    Serial.print("\nOCR4B: ");
+    Serial.print("OCR4B: ");
     Serial.print(OCR4B, DEC);
-    Serial.println("\nOCR4B = Counter Value when pin should turn off");
+    Serial.print(";\tOCR4B = Counter Value when pin should turn off\n");
 
-    Serial.print("\nOCR4C: ");
+    Serial.print("OCR4C: ");
     Serial.print(OCR4C, DEC);
-    Serial.println("\nOCR4C = Counter Value when pin should turn off");
+    Serial.print(";\tOCR4C = Counter Value when pin should turn off\n");
 
   #endif //PRINT_DEBUG_PWM
   
@@ -293,7 +294,7 @@ void setMotor1DutyCycle(uint16_t percent){
   }
 
   //Set compare register to the value to turn off
-  OCR4B = ICR4*percent/100;
+  OCR4B = ICR4*percent/10;
 
   //Print all details of changing PWM on Pin 7 if debugging
   #ifdef PRINT_DEBUG_PWM
@@ -301,12 +302,12 @@ void setMotor1DutyCycle(uint16_t percent){
     Serial.print(percent, DEC);
 
     Serial.print("\nICR4: ");
-    Serial.print(ICR4, BIN);
-    Serial.println("\nICR4 = top of timer = period");
+    Serial.print(ICR4, DEC);
+    Serial.print(";\tICR4 = top of timer = period");
 
     Serial.print("\nOCR4B: ");
-    Serial.print(OCR4B, BIN);
-    Serial.println("\nOCR4B = Counter Value when pin should turn off");
+    Serial.print(OCR4B, DEC);
+    Serial.print(";\tOCR4B = Counter Value when pin should turn off\n");
 
   #endif //PRINT_DEBUG_PWM
   
@@ -323,19 +324,19 @@ void setMotor2DutyCycle(uint16_t percent){
   }
 
   //Set compare register to the value to turn off
-  OCR4C = ICR4*percent/100;
+  OCR4C = ICR4*percent/10;
     //Print all details of changing PWM on Pin 7 if debugging
   #ifdef PRINT_DEBUG_PWM
     Serial.print("\nPin 8 Duty Cycle Changed to:");
     Serial.print(percent, DEC);
 
     Serial.print("\nICR4: ");
-    Serial.print(ICR4, BIN);
-    Serial.println("\nICR4 = top of timer = period");
+    Serial.print(ICR4, DEC);
+    Serial.print(";\tICR4 = top of timer = period");
 
     Serial.print("\nOCR4C: ");
-    Serial.print(OCR4C, BIN);
-    Serial.println("\nOCR4C = Counter Value when pin should turn off");
+    Serial.print(OCR4C, DEC);
+    Serial.print(";\tOCR4C = Counter Value when pin should turn off\n");
   #endif //PRINT_DEBUG_PWM
   
 }
