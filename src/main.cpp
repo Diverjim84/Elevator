@@ -15,10 +15,10 @@
   #define PRINT_DEBUG_MOTOR
 
   //Print motor Faults
-  #define PRINT_DEBUG_MOTOR_FAULTS
+  //#define PRINT_DEBUG_MOTOR_FAULTS
 
   //Print Motor Current draw
-  #define PRINT_DEBUG_MOTOR_CURRENT
+  //#define PRINT_DEBUG_MOTOR_CURRENT
 
 #endif //DEBUG_ON
 
