@@ -19,12 +19,12 @@ stateDiagram-v2
     Init --> BIT_Error : IBIT Fail
     Init --> Standby : IBIT Pass
     
-    Standby --> Maintenance 
+    Standby --> Maintenance  : Request
     Standby --> ESTOP : BIT Fail | ESTOP
     Operation --> ESTOP : BIT Fail | ESTOP
     
     BIT_Error --> Standby : Fault Cleared
-    BIT_Error --> Maintenance 
+    BIT_Error --> Maintenance : Request
     
     
     ESTOP --> BIT_Error : BIT Fail
