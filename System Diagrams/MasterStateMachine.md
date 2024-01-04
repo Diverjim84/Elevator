@@ -1,0 +1,65 @@
+# Main State Machine
+
+
+
+```mermaid
+stateDiagram-v2
+    classDef badBadEvent fill: Red, color:white,font-weight:bold,stroke-width:4px,stroke:yellow
+
+    classDef lessBadEvent fill: Red,color:white,font-weight:bold,stroke-width:4px,stroke:white
+    
+    classDef NoMovement font-weight:bold, stroke-width:4px,stroke:Green
+
+    classDef Movement font-weight:bold stroke-width:6px,stroke:Yellow
+
+    state  "Fully Mission Capable" as FMC
+    
+    [*] --> Init
+    Init --> Bit_Error : IBIT Fail
+    Init --> Standby : IBIT Pass
+    
+    Standby --> Maintenance 
+    Standby --> Operation : Call Button | Summon
+    Standby --> ESTOP : BIT Fail | ESTOP
+    Operation --> Standby : Complete
+    Operation --> ESTOP : BIT Fail | ESTOP
+    
+    Bit_Error --> Standby : Fault Cleared
+    Bit_Error --> Maintenance : ESTOP Override
+    
+    
+    ESTOP --> Bit_Error : BIT Fail
+    ESTOP --> Standby : ESTOP Cleared
+    ESTOP --> Maintenance : ESTOP Override
+    
+    Maintenance --> Init 
+    Maintenance --> Standby
+
+    state FMC {
+        Standby 
+        Operation
+    }
+    
+    state Maintenance {
+        state "Manual Control" As M1
+        state "Calibration" As M2
+    }
+
+    state Error {
+        Bit_Error
+        ESTOP
+    }
+
+    Init ::: NoMovement
+
+    Standby ::: NoMovement
+    Operation ::: Movement
+
+    Maintenance ::: Movement
+
+    ESTOP ::: badBadEvent
+    Bit_Error ::: lessBadEvent
+
+
+
+```
