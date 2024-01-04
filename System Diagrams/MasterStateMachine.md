@@ -16,23 +16,23 @@ stateDiagram-v2
     
     
     [*] --> Init
-    Init --> Bit_Error : IBIT Fail
+    Init --> BIT_Error : IBIT Fail
     Init --> Standby : IBIT Pass
     
     Standby --> Maintenance 
     Standby --> ESTOP : BIT Fail | ESTOP
     Operation --> ESTOP : BIT Fail | ESTOP
     
-    Bit_Error --> Standby : Fault Cleared
-    Bit_Error --> Maintenance : ESTOP Override
+    BIT_Error --> Standby : Fault Cleared
+    BIT_Error --> Maintenance 
     
     
-    ESTOP --> Bit_Error : BIT Fail
+    ESTOP --> BIT_Error : BIT Fail
     ESTOP --> Standby : ESTOP Cleared
     ESTOP --> Maintenance : ESTOP Override
     
     Maintenance --> Init 
-    Maintenance --> Standby
+    Maintenance --> Standby : BIT Pass
 
     state FMC {
         Standby 
@@ -41,8 +41,8 @@ stateDiagram-v2
 
         Standby --> Operation : Call Button | Summon
         Operation --> Standby : Complete
-        Standby --> Ventilate
-        Ventilate --> Standby
+        Standby --> Ventilate : Timer 
+        Ventilate --> Standby : Timer 
         
     
     }
@@ -53,7 +53,7 @@ stateDiagram-v2
     }
 
     state Error {
-        Bit_Error
+        BIT_Error
         ESTOP
     }
 
