@@ -19,9 +19,7 @@ stateDiagram-v2
     Init --> Standby : IBIT Pass
     
     Standby --> Maintenance 
-    Standby --> Operation : Call Button | Summon
     Standby --> ESTOP : BIT Fail | ESTOP
-    Operation --> Standby : Complete
     Operation --> ESTOP : BIT Fail | ESTOP
     
     Bit_Error --> Standby : Fault Cleared
@@ -38,6 +36,14 @@ stateDiagram-v2
     state FMC {
         Standby 
         Operation
+        Ventilate
+
+        Standby --> Operation : Call Button | Summon
+        Operation --> Standby : Complete
+        Standby --> Ventilate
+        Ventilate --> Standby
+        
+    
     }
     
     state Maintenance {
