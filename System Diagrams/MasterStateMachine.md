@@ -4,9 +4,9 @@
 
 ```mermaid
 stateDiagram-v2
-    classDef badBadEvent fill: Red, color:white,font-weight:bold,stroke-width:4px,stroke:yellow
+    classDef badBadEvent fill: Red, color:white,font-weight:bold,stroke-width:6px,stroke:Green
 
-    classDef lessBadEvent fill: Red,color:white,font-weight:bold,stroke-width:4px,stroke:white
+    classDef lessBadEvent fill: Red,color:white,font-weight:bold,stroke-width:6px,stroke:Green
     
     classDef NoMovement font-weight:bold, stroke-width:4px,stroke:Green
 
