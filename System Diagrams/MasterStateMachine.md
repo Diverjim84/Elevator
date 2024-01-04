@@ -14,6 +14,7 @@ stateDiagram-v2
 
     state  "Fully Mission Capable" as FMC
     
+    
     [*] --> Init
     Init --> Bit_Error : IBIT Fail
     Init --> Standby : IBIT Pass
@@ -55,6 +56,10 @@ stateDiagram-v2
         Bit_Error
         ESTOP
     }
+
+    note left of Error : IBIT = Initialization Built In Test
+
+    note left of Error : BIT = Built In Test
 
     Init ::: NoMovement
 
