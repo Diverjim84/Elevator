@@ -1,44 +1,33 @@
 #pragma once
 
+#include <Arduino.h>
 //make sure header is only linked once.  Will draw on it from multiple files
 
 
 class HydraulicController
 {
-private:
-    /* data */
-    volatile bool mPWMFault;
-    volatile bool mPWMFault_Last;
-
-    volatile bool mPumpOverPressure;
-    volatile bool mPumpOverPressure_Last;
-
-    volatile bool mPumpPower;
-    volatile bool mPumpPower_Last;
-
-    volatile bool mPumpFluid;
-    volatile bool mPumpFluid_Last;
-
-    bool mPWMEnabled;
-
-    int mValvePercent;
-
-    bool mPumpOn;
-    unsigned long mPumpStartTime;
-
-    
-    void ConfigPWMTimer();
-    void EnableValve(bool enable);
-    
 public:
     HydraulicController();
     ~HydraulicController();
+
+    enum HCFaults{
+        VALVE_PWM_FAULT = 0,
+        VALVE_PWM_OVER_CURRENT = 1,
+        PUMP_OVER_PRESURE = 2,
+        PUMP_OVER_TEMP = 3,
+        PUMP_FLUID_LOW = 4,
+        PUMP_NO_POWER = 5,
+        PS24V_NO_POWER = 6
+    };
+
 
     void Init();
 
     int GetVarValveCurrent_mA();
 
-    void SetValve(int percent);
+    void SetValve(uint16_t percent);
+    void SetPWM1(uint16_t percent);
+    void EnableValve(bool enable);
 
     void Stop();
 
@@ -46,7 +35,7 @@ public:
 
     bool BuildInTest();
 
-    bool GetValveHasFault();
+    bool IsFaultPresent(HCFaults type);
 
     unsigned long GetPumpOnTimeMillis();
 
@@ -55,6 +44,25 @@ public:
     void PumpPowerISR(bool state);
     void PumpFluidISR(bool state);
 
+private:
+    /* data */
+    volatile uint8_t mFaults;//holds the current fault status
+    
+
+    bool mPWMEnabled;
+
+    uint8_t mValvePercent;
+    uint8_t mPWM1Percent;
+
+    bool mPumpOn;
+    unsigned long mPumpStartTime;
+
+    
+    void ConfigPWMTimer();
+    
+
+    inline void SetFaultValue(HCFaults type, bool value);
+    
 
 };
 

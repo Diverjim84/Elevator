@@ -7,7 +7,7 @@
 
 HydraulicController::HydraulicController()
 {
-    Init();
+   
 }
 
 HydraulicController::~HydraulicController()
@@ -22,6 +22,13 @@ void HydraulicController::Init()
     pinMode(Valve_PWM, OUTPUT);
     pinMode(Valve_Fault, INPUT_PULLUP);
     pinMode(Valve_CurrentMonitor, INPUT); //Analog sensor
+
+    //PWM
+    pinMode(M1EN, OUTPUT);
+    pinMode(M1DIR, OUTPUT);
+    pinMode(M1PWM, OUTPUT);
+    pinMode(M1DIAG, INPUT_PULLUP);
+    pinMode(M1OCM, INPUT); //Analog sensor
 
     //Pump Control
     pinMode(PumpMotor_Relay, OUTPUT);//Relay to control hydraulic pump
@@ -50,27 +57,31 @@ void HydraulicController::Init()
     mPWMEnabled = false;
     digitalWrite(Valve_Enable, mPWMEnabled); 
 
-    //Init Fault state to current state
-    mPWMFault = digitalRead(Valve_Fault); 
-
     mValvePercent = 0;
-
-    //init last fault state to same as current
-    mPWMFault_Last = mPWMFault;
-
+   
     mPumpOn = false;
     digitalWrite(PumpMotor_Relay, mPumpOn);
     mPumpStartTime = 0;
 
-    mPumpOverPressure = digitalRead(PumpMotor_OverPresure);
-    mPumpOverPressure_Last = mPumpOverPressure;
+    mFaults = 0;
+    
+    SetFaultValue(HCFaults::VALVE_PWM_FAULT, !digitalRead(Valve_Fault));
 
-    mPumpFluid = digitalRead(PumpMotor_FluidLow);
-    mPumpFluid_Last = mPumpFluid;
+    digitalWrite(M1EN, true);
+    digitalWrite(M1DIR, true);
+    digitalWrite(Valve_Enable, true);
+    
+}
 
-    mPumpPower = digitalRead(PumpMotor_VoltagePresent);
-    mPumpPower_Last = mPumpPower;
-
+void HydraulicController::SetFaultValue(HCFaults type, bool value){
+    if(value){
+        //Set Fault
+        mFaults |= (1 << type);
+    }else{
+        //Clear Fault
+        mFaults &= ~(1 << type);
+    }
+    
 }
 
 void HydraulicController::ConfigPWMTimer()
@@ -164,17 +175,23 @@ void HydraulicController::EnableValve(bool enable){
     #endif //PRINT_DEBUG_MOTOR
 }
 
-void HydraulicController::SetValve(int percent){
+void HydraulicController::SetValve(uint16_t percent){
     //Check limits
     if(percent>100){
         percent = 100;
     }
 
-    mValvePercent = percent;
+    if(percent == mValvePercent){
+        return; //no change, do nothing
+    }
 
+    mValvePercent = percent;
+    
+/*
     if(!mPWMEnabled){
         EnableValve(true);
     }
+*/
 
     //Set compare register to the value to turn off
     uint16_t totalTicks = ICR4;
@@ -192,6 +209,46 @@ void HydraulicController::SetValve(int percent){
 
         Serial.print("\nValve Compare Register: ");
         Serial.print(Valve_CompareReg, DEC);
+        Serial.print(";\tOCR4n = Counter Value when pin should turn off\n");
+    #endif //PRINT_DEBUG_PWM
+    
+
+}
+
+void HydraulicController::SetPWM1(uint16_t percent){
+    //Check limits
+    if(percent>100){
+        percent = 100;
+    }
+
+    if(percent == mPWM1Percent){
+        return; //no change, do nothing
+    }
+
+    mPWM1Percent = percent;
+    
+/*
+    if(!mPWMEnabled){
+        EnableValve(true);
+    }
+*/
+
+    //Set compare register to the value to turn off
+    uint16_t totalTicks = ICR4;
+    uint16_t onTicks = (uint16_t)(float)totalTicks*((float)mPWM1Percent/100.0);
+    PWM1_CompareReg = onTicks;
+
+    //Print all details of changing PWM on Pin 7 if debugging
+    #ifdef PRINT_DEBUG_PWM
+        Serial.print("\nPWM1 Duty Cycle Changed to:");
+        Serial.print(mPWM1Percent, DEC);
+
+        Serial.print("%\nICR4: ");
+        Serial.print(ICR4, DEC);
+        Serial.print(";\tICR4 = top of timer = period");
+
+        Serial.print("\nPWM1 Compare Register: ");
+        Serial.print(PWM1_CompareReg, DEC);
         Serial.print(";\tOCR4n = Counter Value when pin should turn off\n");
     #endif //PRINT_DEBUG_PWM
     
@@ -234,16 +291,26 @@ unsigned long HydraulicController::GetPumpOnTimeMillis(){
 
 bool HydraulicController::BuildInTest(){
 
-    return false;
+    uint8_t faults = mFaults;
+
+    //ADD CODE HERE TO DO BIT 
+
+    if(faults!=0){
+        return false;
+    }else{
+        return true;
+    }
+    
 }
 
-bool HydraulicController::GetValveHasFault(){
-    return mPWMFault;
+bool HydraulicController::IsFaultPresent(HCFaults type){
+    
+    return false;
+
 }
 
 void HydraulicController::PWMFaultISR(bool state){
-    mPWMFault_Last = mPWMFault;
-    mPWMFault = state;
+    
 }
 
 void HydraulicController::PumpOverPresureISR(bool state){

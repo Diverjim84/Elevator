@@ -63,6 +63,8 @@
 #define Valve_CurrentMonitor M2OCM
 #define Valve_CompareReg M2OCR
 
+#define PWM1_CompareReg M1OCR
+
 
 
 
@@ -73,15 +75,15 @@
 
 /***************************** Button Management ********************************/
 
-#define CallButton_UpperButtonBTN 62
+#define CallButton_UpperButtonBTN A8
 #define CallButton_UpperButtonLED 26
 
-#define CallButton_LowerButtonBTN 63
+#define CallButton_LowerButtonBTN A9
 #define CallButton_LowerButtonLED 27
 
-#define CallButton_ClosetUpperBTN 64
+#define CallButton_ClosetUpperBTN A10
 #define CallButton_ClosetUpperLED 29
-#define CallButton_ClosetLowerBTN 65
+#define CallButton_ClosetLowerBTN A11
 #define CallButton_ClosetLowerLED 28
 
 #define ESTOP_UpperBTN 18
@@ -101,8 +103,8 @@
 #define DoorLock_Lower_Relay 34
 #define DoorLock_Upper_Relay 33
 
-#define DoorLock_Lower_LimitSwitch 69
-#define DoorLock_Upper_LimitSwitch 68
+#define DoorLock_Lower_LimitSwitch A15
+#define DoorLock_Upper_LimitSwitch A14
  
 
 /***************************** Vent Fan ***********************************/

@@ -10,15 +10,15 @@
   //Very important for keeping serial port output manageable
 
   //Print PWM debug Statements
-  //#define PRINT_DEBUG_PWM
+  #define PRINT_DEBUG_PWM
 
   //Print settings of motors
-  //#define PRINT_DEBUG_MOTOR
+  #define PRINT_DEBUG_MOTOR
 
   //Print motor Faults
   #define PRINT_DEBUG_MOTOR_FAULTS
 
   //Print Motor Current draw
-  #define PRINT_DEBUG_MOTOR_CURRENT
+  //#define PRINT_DEBUG_MOTOR_CURRENT
 
 #endif //DEBUG_ON
