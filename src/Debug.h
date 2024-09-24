@@ -21,4 +21,7 @@
   //Print Motor Current draw
   //#define PRINT_DEBUG_MOTOR_CURRENT
 
+  //Print Interrupt debug statements
+  #define PRINT_DEBUG_INTERRUPT
+
 #endif //DEBUG_ON

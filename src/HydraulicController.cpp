@@ -32,22 +32,17 @@ void HydraulicController::Init()
 
     //Pump Control
     pinMode(PumpMotor_Relay, OUTPUT);//Relay to control hydraulic pump
-    pinMode(PumpMotor_VoltagePresent, INPUT_PULLUP); //Confirms Pump Has power
-    pinMode(PumpMotor_Presure, INPUT_PULLUP); //Sensor for Overpresure
-    pinMode(PumpMotor_FluidLow, INPUT_PULLUP); //Sensor for low fluid
+    //pinMode(PumpMotor_FluidLow, INPUT_PULLUP); //Sensor for low fluid
     pinMode(PumpMotor_Temp, INPUT); //Analog sensor
     
     //Locking Solenoid
     pinMode(Solenoid_Relay, OUTPUT);
 
     //24V Power Supply Control
-    pinMode(PowerSuppy_Relay, OUTPUT);
-    pinMode(PowerSuppy_VoltagePresent, INPUT);
+    //pinMode(PowerSuppy_Relay, OUTPUT);
+    //pinMode(PowerSuppy_VoltagePresent, INPUT);
 
-    //Limit Switches
-    pinMode(LimitSwitch_UpperMax, INPUT_PULLUP);
-    pinMode(LimitSwitch_LowerMax, INPUT_PULLUP);
-
+    
     ConfigPWMTimer();
 
     //Set the DIR pin until it can be optimized out
@@ -236,7 +231,7 @@ void HydraulicController::SetPWM1(uint16_t percent){
     //Set compare register to the value to turn off
     uint16_t totalTicks = ICR4;
     uint16_t onTicks = (uint16_t)(float)totalTicks*((float)mPWM1Percent/100.0);
-    PWM1_CompareReg = onTicks;
+    M1OCR = onTicks;
 
     //Print all details of changing PWM on Pin 7 if debugging
     #ifdef PRINT_DEBUG_PWM
@@ -248,7 +243,7 @@ void HydraulicController::SetPWM1(uint16_t percent){
         Serial.print(";\tICR4 = top of timer = period");
 
         Serial.print("\nPWM1 Compare Register: ");
-        Serial.print(PWM1_CompareReg, DEC);
+        Serial.print(M1OCR, DEC);
         Serial.print(";\tOCR4n = Counter Value when pin should turn off\n");
     #endif //PRINT_DEBUG_PWM
     

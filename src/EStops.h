@@ -16,6 +16,7 @@ namespace EStop {
     //code to estop system
     void ESTOP(){
         globals::hc.Stop();
+        globals::hc.SetPWM1(100);
     }
 
 
@@ -40,6 +41,11 @@ namespace EStop {
     }
 
     void estopLEDUpdate(){
+        //digitalWrite(ESTOP_UpperLED, digitalRead(ESTOP_UpperLED)^1);
+        //digitalWrite(ESTOP_LowerLED, digitalRead(ESTOP_LowerLED)^1);
+        //digitalWrite(ESTOP_CarLED, digitalRead(ESTOP_CarLED)^1);
+        //digitalWrite(ESTOP_ClosetLED, digitalRead(ESTOP_ClosetLED)^1);
+        
         if(eStopped()){
             //if Estop button is triggered, then it should be solid, others blink
             if(upperState){//on
@@ -68,6 +74,7 @@ namespace EStop {
             digitalWrite(ESTOP_CarLED, LOW);
             digitalWrite(ESTOP_ClosetLED, LOW);
         }
+        //*/
     }
 
 
@@ -80,24 +87,78 @@ namespace EStop {
             if(upperState == HIGH){ //ESTOP SET
                 digitalWrite(ESTOP_UpperLED, HIGH);//Turn on Estop Light
                 ESTOP();
+                #ifdef PRINT_DEBUG_INTERRUPT
+                    Serial.print("\n\n*** ISR: Upper Estop Button State: Set\n");
+                #endif
             }else{  //ESTOP CLEAR
                 digitalWrite(ESTOP_UpperLED, LOW);
+                #ifdef PRINT_DEBUG_INTERRUPT
+                    Serial.print("\n\n*** ISR: Upper Estop Button State: Clear\n");
+                #endif
             }
 
         }
-
+        
     }
 
     void isrESTOPLower(){
+        bool currentState = digitalRead(ESTOP_LowerBTN);
 
+        if(lowerState != currentState){
+            lowerState = currentState;
+            if(lowerState == HIGH){ //ESTOP SET
+                digitalWrite(ESTOP_LowerLED, HIGH);
+                ESTOP();
+                #ifdef PRINT_DEBUG_INTERRUPT
+                    Serial.print("\n\n*** ISR: Lower Estop Button State: Set\n");
+                #endif
+            }else{   //ESTOP CLEAR
+                digitalWrite(ESTOP_LowerLED, LOW);
+                #ifdef PRINT_DEBUG_INTERRUPT
+                    Serial.print("\n\n*** ISR: Lower Estop Button State: Clear\n");
+                #endif
+            }
+        }
     }
 
     void isrESTOPCar(){
+        bool currentState = digitalRead(ESTOP_CarBTN);
 
+        if(carState != currentState){
+            carState = currentState;
+            if(carState == HIGH){ //ESTOP SET
+                digitalWrite(ESTOP_CarLED, HIGH);
+                ESTOP();
+                 #ifdef PRINT_DEBUG_INTERRUPT
+                    Serial.print("\n\n*** ISR: Car Estop Button State: Set\n");
+                 #endif
+            }else{    //ESTOP CLEAR
+                digitalWrite(ESTOP_CarLED, LOW);
+                 #ifdef PRINT_DEBUG_INTERRUPT
+                    Serial.print("\n\n*** ISR: Car Estop Button State: Clear\n");
+                 #endif
+            }
+        }
     }
 
     void isrESTOPCloset(){
+        bool currentState = digitalRead(ESTOP_ClosetBTN);
 
+        if(closetState != currentState){
+            closetState = currentState;
+            if(closetState == HIGH){ //ESTOP SET
+                digitalWrite(ESTOP_ClosetLED, HIGH);
+                ESTOP();
+                  #ifdef PRINT_DEBUG_INTERRUPT
+                    Serial.print("\n\n*** ISR: Closet Estop Button State: Set\n");
+                  #endif
+             }else{     //ESTOP CLEAR
+                digitalWrite(ESTOP_ClosetLED, LOW);
+                  #ifdef PRINT_DEBUG_INTERRUPT
+                    Serial.print("\n\n*** ISR: Closet Estop Button State: Clear\n");
+                  #endif
+            }
+         }
     }
 
     void initESTOP(){

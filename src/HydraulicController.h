@@ -18,7 +18,7 @@ public:
         PUMP_FLUID_LOW = 4,
         PUMP_NO_POWER = 5,
         PS24V_NO_POWER = 6
-    };
+    }; 
 
 
     void Init();
@@ -27,6 +27,10 @@ public:
 
     void SetValve(uint16_t percent);
     void SetPWM1(uint16_t percent);
+
+    uint16_t GetValvePercent(){return mValvePercent;};
+    uint16_t GetPWM1Percent(){return mPWM1Percent;};
+
     void EnableValve(bool enable);
 
     void Stop();

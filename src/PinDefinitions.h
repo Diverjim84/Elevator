@@ -41,20 +41,6 @@
 
 
 /***************************** Hydrolic Control ********************************/
-//AC Pump
-#define PumpMotor_Relay 31
-#define PumpMotor_VoltagePresent 15
-#define PumpMotor_Temp A2
-#define PumpMotor_FluidLow 14
-#define PumpMotor_OverPresure 3
-#define PumpMotor_Presure A3
-
-//Valve Control
-#define PowerSuppy_Relay 30
-#define PowerSuppy_VoltagePresent A4
-
-
-#define Solenoid_Relay 32
 
 #define Valve_Enable M2EN
 #define Valve_Dir M2DIR
@@ -63,54 +49,121 @@
 #define Valve_CurrentMonitor M2OCM
 #define Valve_CompareReg M2OCR
 
-#define PWM1_CompareReg M1OCR
+/***************************** Solenoid Control  *************************/
+//solenoid valve on Motor
+#define Solenoid_Enable M1EN
+#define Solenoid_Dir M1DIR
+#define Solenoid_PWM M1PWM
+#define Solenoid_Fault M1DIAG
+#define Solenoid_CurrentMonitor M1OCM
+#define Solenoid_CompareReg M1OCR
 
 
 
+/***************************** Analog ********************************/
 
+#define PumpMotor_Temp A2
+#define Cylinder_Pressure A3
+#define PumpMotor_Presure A4
+#define Temp_2 A5
+#define Temp_3 A6
+#define Joystick A7
+
+
+/***************************** Relays ********************************/
+
+//220V Pump Motor Relay
+#define PumpMotor_Relay 31
+
+//relay header
+#define Solenoid_Relay 32
+#define DoorLock_Upper_Relay 33
+#define DoorLock_Lower_Relay 34
+#define Vent_Relay 35
+
+
+/***************************** Interrupts ********************************/
+
+//ESTOP Buttons
+#define ESTOP_CarBTN 18
+#define ESTOP_UpperBTN 20
+#define ESTOP_LowerBTN 19
+#define ESTOP_ClosetBTN 21
+
+//External Interrupt control registers
+//  Int Id: 5   4    3    2    1    0
+//Pin List: D3, D2, D18, D19, D20, D21
+#define EStop_EICRA 0xFF
+#define EStop_EIMSK 0x0F
+/*
+EICR = External Interrupt Control Register
+EICRA = int3-int0
+EICRB = int7-int4
+ISCn1 ISCn0  Description
+0     0      The low level of INTn generates an interrupt request
+0     1      Any logical change on INTn generates an interrupt request
+1     0      The falling edge between two samples of INTn generates an interrupt request
+1     1      The rising edge between two samples of INTn generates an interrupt request
+*/
+
+
+
+//PCINT0 (Port B - PINB)
+//Int Id:    7    6    5    4    3    2    1    0
+//Pin List: D13, D12, D11, D10, D50, D51, D52, D53
+
+//PCINT1 (Port J - PINJ)
+// Int ID   15  14  13  12  11  10   9    8
+//pin list: NC, NC, NC, NC, NC, D15, D14, D0
+#define PumpMotor_OverPresure 14
+#define PumpMotor_VoltagePresent 15
+
+//PCINT2 (port K - PINK)
+//pin list: A8-A15
+
+//Call Buttons
+#define CallButton_UpperBTN A8
+#define CallButton_LowerBTN A9
+//Door closed switches
+#define DoorLock_Lower_LimitSwitch A13
+#define DoorLock_Upper_LimitSwitch A12
 //Limit Switches
-#define LimitSwitch_UpperMax 13
-#define LimitSwitch_LowerMax 11
+#define LimitSwitch_UpperMax A14
+#define LimitSwitch_LowerMax A15
 
+//Pin Change control register masks PCMSK[2-0]
+//PCINT 7-0
+#define PCINT_Mask0 0x00
+//PCINT 15-8
+#define PCINT_Mask1 0b00000110
+//PCINT 23-16
+#define PCINT_Mask2 0b11110011
+//Enable PCINT2, PCINT1, PCINT0
+#define PCINT_En_Mask 0b00000110
 
-/***************************** Button Management ********************************/
+/***************************** LED Management ********************************/
 
-#define CallButton_UpperButtonBTN A8
-#define CallButton_UpperButtonLED 26
-
-#define CallButton_LowerButtonBTN A9
-#define CallButton_LowerButtonLED 27
-
-#define CallButton_ClosetUpperBTN A10
+//LEDs
+#define CallButton_UpperButtonLED 27
+#define CallButton_LowerButtonLED 26
 #define CallButton_ClosetUpperLED 29
-#define CallButton_ClosetLowerBTN A11
 #define CallButton_ClosetLowerLED 28
 
-#define ESTOP_UpperBTN 18
-#define ESTOP_UpperLED 22
-
-#define ESTOP_LowerBTN 20
-#define ESTOP_LowerLED 24
-
-#define ESTOP_CarBTN 19
+#define ESTOP_UpperLED 24
+#define ESTOP_LowerLED 22
 #define ESTOP_CarLED 23
-
-#define ESTOP_ClosetBTN 21
 #define ESTOP_ClosetLED 25
 
-/***************************** Door Control ********************************/
+//RGB
+//OC3{A,B,C}
+#define Upper_RGB_R 11 
+#define Upper_RGB_G 12 
+#define Upper_RGB_B 13 
 
-#define DoorLock_Lower_Relay 34
-#define DoorLock_Upper_Relay 33
-
-#define DoorLock_Lower_LimitSwitch A15
-#define DoorLock_Upper_LimitSwitch A14
- 
-
-/***************************** Vent Fan ***********************************/
-
-
-#define Vent_Relay 35
+//OC1{A,B,C}
+#define Lower_RGB_R 5
+#define Lower_RGB_G 2
+#define Lower_RGB_B 3
 
 /***************************** Communication ******************************/
 
