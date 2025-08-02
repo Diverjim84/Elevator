@@ -126,9 +126,11 @@ ISCn1 ISCn0  Description
 #define CallButton_LowerBTN A9
 //Door closed switches
 #define DoorLock_Lower_LimitSwitch A13
-#define DoorLock_Upper_LimitSwitch A12
+//#define DoorLock_Upper_LimitSwitch A12
+#define DoorLock_Upper_LimitSwitch A14
 //Limit Switches
-#define LimitSwitch_UpperMax A14
+//#define LimitSwitch_UpperMax A14
+#define LimitSwitch_UpperMax A12
 #define LimitSwitch_LowerMax A15
 
 //Pin Change control register masks PCMSK[2-0]
@@ -171,5 +173,10 @@ ISCn1 ISCn0  Description
 #define ESP32_SPI_MISO 50
 #define ESP32_SPI_MOSI 51
 #define ESP32_SPI_CLK 52
+
+
+/************************** Opperating Parameters *************************/
+
+#define PUMP_PRIME_TIME 350 //ms
 
 

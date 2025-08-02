@@ -10,7 +10,12 @@
   //Very important for keeping serial port output manageable
 
   //Print PWM debug Statements
-  #define PRINT_DEBUG_PWM
+  //#define PRINT_DEBUG_PWM
+
+  //#define ESTOP_UPPER_DISABLED
+  //#define ESTOP_LOWER_DISABLED
+  //#define ESTOP_CAR_DISABLED
+  //#define ESTOP_CLOSET_DISABLED
 
   //Print settings of motors
   #define PRINT_DEBUG_MOTOR

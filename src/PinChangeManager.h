@@ -48,13 +48,13 @@ ISR(PCINT1_vect){
   if(changed_pins & 0x02){
     //rising edge = door open
     if(pinStates  & (0x02)) {
-      globals::PumpMotor_PressureExceeded = true;
+      Globals::hc->SetPumpPresureExceeded(true);
 
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Pump Motor Pressure Exceeded ***");
       #endif
     }else{ //falling edge = door closed    
-      globals::PumpMotor_PressureExceeded = false;
+      Globals::hc->SetPumpPresureExceeded(false);
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Pump Motor Pressure Cleared ***");
       #endif
@@ -65,12 +65,12 @@ ISR(PCINT1_vect){
   if(changed_pins & 0x01){
     //rising edge = power on
     if(pinStates  & (0x01)) {
-      globals::PumpMotor_PowerFailure = false;
+      Globals::hc->SetPumpPowerFailure(false);
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Pump Motor Has Power ***");
       #endif
     }else{ //falling edge = no power   
-      globals::PumpMotor_PowerFailure = true;
+      Globals::hc->SetPumpPowerFailure(true);
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Pump Motor Power Lost ***");
       #endif
@@ -90,18 +90,23 @@ ISR(PCINT2_vect){
   if ((changed_pins & (1 << (CallButton_UpperBTN - (uint8_t)62U))))
   {
     if(pinStates & (1 << (CallButton_UpperBTN - (uint8_t)62U))) {
-      // Call Button changed 
+      // Call Button Pressed
       //digitalWrite(CallButton_UpperButtonLED, !digitalRead(CallButton_UpperButtonLED));
-      digitalWrite(CallButton_UpperButtonLED, LOW);
-      globals::UpperCalled != globals::UpperCalled;
-      globals::hc.SetPWM1(0);
+      //digitalWrite(CallButton_UpperButtonLED, LOW);
+      Globals::upperCallBtn.set(false);
+      
+      //globals::hc.TurnOnPump(LOW);
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("\n\n*** ISR: Upper Call Btn Rising edge ***\n");
       #endif
     }else
     {
-      digitalWrite(CallButton_UpperButtonLED, HIGH);
-      globals::hc.SetPWM1(100);
+      // Call Button Not Pressed
+      Globals::upperCallBtn.set(true);
+      Globals::hc->SetTargetPosition(1500);
+      
+      //digitalWrite(CallButton_UpperButtonLED, HIGH);
+      //globals::hc.TurnOnPump(HIGH);
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("\n\n*** ISR: Upper Call Btn Falling edge ***\n");
       #endif
@@ -110,27 +115,43 @@ ISR(PCINT2_vect){
   }
 
   //Call Button Lower Rising edge
-  if ((changed_pins & (1 << (CallButton_LowerBTN - (uint8_t)62U)))&&
-      (pinStates & (1 << (CallButton_LowerBTN - (uint8_t)62U)))) {
-    //digitalWrite(CallButton_LowerButtonLED, !digitalRead(CallButton_LowerButtonLED));
-    globals::LowerCalled != globals::LowerCalled;
+  if (changed_pins & (1 << (CallButton_LowerBTN - (uint8_t)62U))) 
+  {
+    if(pinStates & (1 << (CallButton_LowerBTN - (uint8_t)62U))) {
+      // Call Button Pressed 
+      //digitalWrite(CallButton_LowerButtonLED, LOW);
+      Globals::lowerCallBtn.set(false);
+      
+      //globals::hc.SetPWM1(00);
+      #ifdef PRINT_DEBUG_INTERRUPT
+        Serial.println("\n\n*** ISR: Lower Call Btn Rising edge ***\n");
+      #endif
+    }else
+    {
+      // Call Button Not Pressed
+      Globals::lowerCallBtn.set(true);
+      Globals::hc->SetTargetPosition(15);
+      
+      //digitalWrite(CallButton_LowerButtonLED, HIGH);
+      //globals::hc.SetPWM1(100);
+      #ifdef PRINT_DEBUG_INTERRUPT
+        Serial.println("\n\n*** ISR: Lower Call Btn Falling edge ***\n");
+      #endif
+    }
     
-    #ifdef PRINT_DEBUG_INTERRUPT
-      Serial.println("*** ISR: Lower Call Btn Rising edge ***");
-    #endif
   }
 
   // Lower Door Close Switch changed
   if (changed_pins & (1 << (DoorLock_Lower_LimitSwitch - (uint8_t)62U))){
     //rising edge = door open
     if(pinStates & (1 << (DoorLock_Lower_LimitSwitch - (uint8_t)62U))) {
-      globals::LowerDoorOpen = true;
+      Globals::hc->SetLowerDoorOpen(true);
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Lower Door Switch Open ***");
       #endif
     }else //falling edge = door closed
     {
-      globals::LowerDoorOpen = false;
+      Globals::hc->SetLowerDoorOpen(false);
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Lower Door Switch Closed ***");
       #endif
@@ -141,13 +162,13 @@ ISR(PCINT2_vect){
   if(changed_pins & (1 << (DoorLock_Upper_LimitSwitch - (uint8_t)62U))){
     //rising edge = door open
     if(pinStates  & (1 << (DoorLock_Upper_LimitSwitch - (uint8_t)62U))) {
-      globals::UpperDoorOpen = true;
+      Globals::hc->SetUpperDoorOpen(true);
 
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Upper Door Switch Open ***");
       #endif
     }else{ //falling edge = door closed    
-      globals::UpperDoorOpen = false;
+      Globals::hc->SetUpperDoorOpen(false);
 
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Upper Door Switch Closed ***");
@@ -159,13 +180,13 @@ ISR(PCINT2_vect){
   if(changed_pins & (1 << (LimitSwitch_UpperMax - (uint8_t)62U))){
     //rising edge = Limit Reached
     if(pinStates   &  (1  <<  (LimitSwitch_UpperMax - (uint8_t)62U))) {
-      globals::UpperTravelLimitReached = true;
-
+      Globals::hc->SetUpperLimitSwitch(true);
+      //Globals::hc->Stop();
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Upper Limit Triggered ***");
       #endif
     }else{   //falling edge = not triggered
-      globals::UpperTravelLimitReached = false;
+      Globals::hc->SetUpperLimitSwitch(false);
 
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Upper Limit Cleared ***");
@@ -177,13 +198,13 @@ ISR(PCINT2_vect){
   if(changed_pins & (1 << (LimitSwitch_LowerMax - (uint8_t)62U))){
     //rising edge  = Limit Reached
     if(pinStates    &   (1   <<   (LimitSwitch_LowerMax - (uint8_t)62U))) {
-      globals::LowerTravelLimitReached  = true;
-
+      Globals::hc->SetLowerLimitSwitch(true);
+      //Globals::hc->Stop();
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Lower Limit Triggered ***");
       #endif
     }else{ //falling edge  = not triggered
-      globals::LowerTravelLimitReached  = false;
+      Globals::hc->SetLowerLimitSwitch(false);
       #ifdef PRINT_DEBUG_INTERRUPT
         Serial.println("*** ISR: Lower Limit Cleared ***");
       #endif

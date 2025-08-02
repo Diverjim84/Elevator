@@ -1,22 +1,24 @@
 #pragma once
 
-//This is the class for the Hydraulics Control code.
+// This is the class for the Hydraulics Control code.
+#include "PinDefinitions.h"
 #include "HydraulicController.h"
+#include "EStops.h"
+#include "CallButton.h"
 
-namespace globals {
+namespace Globals
+{
+    extern CallButton upperCallBtn;
+    extern CallButton lowerCallBtn;
+    
+    extern EStops* es; // Pointer to EStops
+    extern HydraulicController* hc; // Pointer to HydraulicController
 
-HydraulicController hc;
+    extern uint8_t          EncoderStatus;
+    extern float            EncoderAngle;
+    extern float            EncoderPosition;
+    extern float            EncoderSpeed;
+    extern unsigned long    EncoderLastMsgTime;
 
-volatile bool UpperDoorOpen = false;
-volatile bool LowerDoorOpen = false;
-
-volatile bool UpperTravelLimitReached = false;
-volatile bool LowerTravelLimitReached = false;
-
-volatile bool PumpMotor_PressureExceeded = false;
-volatile bool PumpMotor_PowerFailure = false;
-
-volatile bool UpperCalled = false;
-volatile bool LowerCalled = false;
-
+    void initializeGlobals(); // Function to initialize global variables
 }
